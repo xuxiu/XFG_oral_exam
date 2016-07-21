@@ -1,0 +1,110 @@
+\documentclass{beamer}
+
+\usepackage{graphicx}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{eso-pic}
+\usepackage{mathrsfs}
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{bbm}
+\usepackage{cooltooltips}
+\usepackage{colordef}
+\usepackage{beamerdefs}
+\usepackage{lvblisting}
+\usepackage{color}
+
+\pgfdeclareimage[height=3.5cm]{logobig}{hucaselogo}
+\pgfdeclareimage[height=0.7cm]{logosmall}{Figures/LOB_Logo}
+
+\renewcommand{\titlescale}{1.0}
+\renewcommand{\titlescale}{1.0}
+\renewcommand{\leftcol}{0.6}
+
+\title[lmplied Binomial Tree ]{Put Option Price}
+\authora{Yinan Wu}
+\authorb{}
+\authorc{}
+
+\def\linka{http://lvb.wiwi.hu-berlin.de}
+\def\linkb{http://case.hu-berlin.de}
+\def\linkc{}
+
+\institute{Ladislaus von Bortkiewicz Chair of Statistics \\
+C.A.S.E. -- Center for Applied Statistics\\
+and Economics\\
+Humboldt--Universit\"at zu Berlin \\}
+
+\hypersetup{pdfpagemode=FullScreen}
+
+\begin{document}
+\frame[plain]{
+\titlepage
+}
+\frame{
+\begin{itemize}
+\item Arrow-Dedreu prices $\lambda_n^i$ (discount risk-neutral probability)\\
+the price of an option that pays 1 in one and only one state i at $n$th level, and otherwise pays 0.\\
+\begin{equation*}
+\begin{aligned}
+\lambda_{n+1}^1&=e^{-r\Delta t}\{(1-p_n^1)\lambda_n^1\}\\
+\lambda_{n+1}^{i+1}&=e^{-r\Delta t}\{\lambda_n^ip_n^i+\lambda_n^{i+1}(1-p_n^{i+1})\}\\
+\lambda_{n+1}^{n+1}&=e^{-r\Delta t}\{\lambda_n^np_n^n\}
+\end{aligned}
+\end{equation*}
+\bigskip
+\item{put option price $P(K,n\Delta t)$}
+$
+P(K,n\Delta t)=\sum_{i=0}^n\lambda_{n+1}^{i+1}\max(K-S_{n+1}^{i+1},0)
+$
+\end{itemize}
+}
+\frame{
+with $K=S=S_n^i$ and $S_n^{i+1}<S_n^{i}<S_{n+1}^{i+1} $ we have:
+\begin{equation*}
+\begin{aligned}
+P(S,n\Delta t) &=e^{-r\Delta t}[\lambda_n^1(1-p_n^1) \max(S-S_{n+1}^1,0)\\
+&+ \sum_{j=1}^{n-1}\{\lambda_n^jp_n^j+\lambda_n^{j+1}(1-p_n^{j+1})\} \max(S-S_{n+1}^{j+1},0)\\
+&+\lambda_n^np_n^n \max(S-S_{n+1}^{n+1},0)]\\
+&=e^{-r\Delta t}[\lambda_n^1(1-p_n^1)(S-S_{n+1}^1)\\
+&+\sum_{j=1}^{i-1}\{\lambda_n^jp_n^j+\lambda_n^{j+1}(1-p_n^{j+1})\}(S-S_{n+1}^{j+1})]
+\end{aligned}
+\end{equation*}
+}
+
+\frame{
+\begin{equation*}
+\begin{aligned}
+P(S,n\Delta t)&=e^{-r\Delta t}\{\lambda_n^1(1-p_n^1)(S-S_{n+1}^1)\\
+&+[\lambda_n^1p_n^1+\lambda_n^2(1-p_n^2)](S-S_{n+1}^2)\\
+&+[\lambda_n^2p_n^2+\lambda_n^3(1-p_n^3)](S-S_{n+1}^3)\\
+&+\ldots\\
+&+[\lambda_n^{i-1}p_n^{i-1}+\lambda_n^i(1-p_n^i)](S-S_{n+1}^i)\}\\
+&=e^{-r\Delta t}[\lambda_n^{i}(1-p_n^{i})(S-S_{n+1}^i)\\
+&+\sum_{j=1}^{i-1}\[\lambda_n^j\{(1-p_n^j)(S-S_{n+1}^j)+P_n^j(S-S_{n+1}^{j+1})\}\\
+\end{aligned}
+\end{equation*}
+\begin{equation*}
+\begin{aligned}
+P(S,n\Delta t)=e^{-r\Delta t}\{\lambda_n^{i}(1-p_n^{i})(S-S_{n+1}^i)+\sum_{j=1}^{i-1}\lambda_n^j(S_n^i-F_n^i)\}
+\end{aligned}
+\end{equation*}
+}
+
+\end{document}
+
+
+
+
+
+
+
+
