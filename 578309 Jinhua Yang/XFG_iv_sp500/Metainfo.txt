@@ -1,0 +1,16 @@
+
+Name of QuantLet: XFG_iv_sp500
+
+Published in: GitHub
+
+Description: 'Uses principal component analysis method to analyze different types of implied volatility expectation index of S&P500 (including VXST(9-day), VIX(30-day), VXV(3-month), VXMT(6-month)) in year 2011 to 2015, computes the variance and cumulated variance explained by principal components, compares the factor loadings of first and second principal components and price projected to PCs through year 2011 to 2015.'
+
+Keywords: plot, graphical representation, principal-components, variance, covariance, dimension-reduction,  eigenvalues, eigenvectors, factor-loadings, implied-volatility, pca, principal-component-analysis, spectral-decomposition
+
+Author: Jinhua Yang
+
+Datafile: sp500iv_11.csv, sp500iv_12.csv, sp500iv_13.csv, sp500iv_14.csv, sp500iv_15.csv
+
+Output: variance and cumulated variance explained
+
+Example: Comparison of factor loadings of first and second principal components through year 2011 to 2015.
