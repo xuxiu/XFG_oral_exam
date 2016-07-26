@@ -1,0 +1,329 @@
+
+\documentclass{beamer}
+\usepackage{graphicx}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{eso-pic}
+\usepackage{mathrsfs}
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{bbm}
+\usepackage{cooltooltips}
+\usepackage{colordef}
+\usepackage{beamerdefs}
+\usepackage{lvblisting}
+
+\pgfdeclareimage[height=2cm]{logobig}{hulogo}
+
+\pgfdeclareimage[height=0.7cm]{logosmall}{Figures/LOB_Logo}
+
+\renewcommand{\titlescale}{1.0}
+\renewcommand{\titlescale}{1.0}
+\renewcommand{\leftcol}{0.6}
+
+
+\title[IBT and Copula]{Implied Binomial Tree and Copula Estimation}
+
+\authora{Thorsten Disser} % a-c
+\authorb{}
+\authorc{}
+
+\def\linka{http://lvb.wiwi.hu-berlin.de}
+\def\linkb{}
+\def\linkc{}
+\institute{Ladislaus von Bortkiewicz Chair of Statistics \\
+Humboldt--Universität zu Berlin \\}
+
+\hypersetup{pdfpagemode=FullScreen}
+
+
+\begin{document}
+
+\frame[plain]{
+\titlepage
+}
+
+\section{Introduction}
+
+\frame{
+\frametitle{Outline}
+
+\begin{enumerate}
+\item Implied Binomial Tree Derivation
+\item Copula Estimation
+
+\end{enumerate}
+}
+
+\section{Implied Binomial Tree Derivation}
+
+\frame{
+\frametitle{Implied Binomial Tree}
+\begin{itemize}
+\item Construction adapted to the volatility smile
+\item Possibility to price derivative securities
+\item Calculation of the state price density (SPD)
+\item Calculation of the implied local volatility surface
+\end{itemize}
+}
+
+\frame{
+\frametitle{IBT algorithm}
+\begin{itemize}
+\item \textcolor{red} {Arrow-Debreu prices} $\lambda_n^i$ (discounted risk-neutral probability) the price of an option that pays 1 in one and only one state i at $n$th level, and otherwise pays 0
+\end{itemize}
+\begin{equation*}
+\begin{aligned}
+\lambda_{n+1}^1&=e^{-r\Delta t}\{(1-p_n^1)\lambda_n^1\}\\
+\lambda_{n+1}^{i+1}&=e^{-r\Delta t}\{\lambda_n^ip_n^i+\lambda_n^{i+1}(1-p_n^{i+1})\}\\
+\lambda_{n+1}^{n+1}&=e^{-r\Delta t}\{\lambda_n^np_n^n\}
+\end{aligned}
+\end{equation*}
+\begin{itemize}
+\item \textcolor{red} {Put option price} $P(K, n\Delta t)$
+\end{itemize}
+\begin{equation*}
+\begin{aligned}
+P(K, n\Delta t) = \sum_{i=0}^n \lambda_{n+1}^{i+1}\max(K-S_{n+1}^{i+1},0) 
+\end{aligned}
+\end{equation*}
+}
+
+\frame{
+
+\begin{itemize}
+\item Define $S_{n+1}^i = S_1^1 = S, i = \frac{n}{2} + 1$, for n even
+\item  K = S = $S_n^i$
+\item Risk-neutral condition:
+\end{itemize}
+\begin{equation*}
+\begin{aligned}
+F_n^i = p_i^nS_{n+1}^{i+1} + (1-p_i^n)S_{n+1}^{i}
+\end{aligned}
+\end{equation*}
+\begin{itemize}
+\item Define
+\end{itemize}
+\begin{equation*}
+\begin{aligned}
+\rho_u = \sum_{j=i+1}^n \lambda_n^j (F_n^j - S_n^i), \rho_l = \sum_{j=1}^{i-1} \lambda_n^j (S_n^i - F_n^j)
+\end{aligned}
+\end{equation*}
+}
+
+\frame{
+\begin{equation*}
+\begin{aligned}
+P(S,n\Delta t) &=e^{-r\Delta t}[\lambda_n^1(1-p_n^1) \max(S-S_{n+1}^1,0)\\
+&+ \sum_{j=1}^{n-1}\{\lambda_n^jp_n^j+\lambda_n^{j+1}(1-p_n^{j+1})\} \max(S-S_{n+1}^{j+1},0)\\
+&+\lambda_n^np_n^n \max(S-S_{n+1}^{n+1},0)]\\
+&=e^{-r\Delta t}[\lambda_n^1(1-p_n^1)(S-S_{n+1}^1)\\
+&+\sum_{j=1}^{i-1}\{\lambda_n^jp_n^j+\lambda_n^{j+1}(1-p_n^{j+1})\}(S-S_{n+1}^{j+1})]
+\end{aligned}
+\end{equation*}
+}
+
+\frame{
+\begin{equation*}
+\begin{aligned}
+P(S,n\Delta t) &=e^{-r\Delta t} \lambda_n^i(1-p_n^i)(S-S_{n+1}^i)\\
+&+\sum_{j=1}^{i-1}\lambda_n^j\{(1-p_n^j)(S-S_{n+1}^j)+p_n^j(S-S_{n+1}^{j+1})]\}\\
+&=e^{-r\Delta t}\{\lambda_n^{i}(1-p_n^{i})(S-S_{n+1}^i)+\sum_{j=1}^{i-1}\lambda_n^j(S_n^i-F_n^j)\} 
+\end{aligned}
+\end{equation*}
+}
+
+\frame{
+\textcolor{red}{Upward}
+\begin{equation*}
+\begin{aligned}
+S_{n+1}^{i+1}&=\frac{S_{n+1}^i\{C(S,n\Delta t)e^{r\Delta t}-\rho_u\}-\lambda_n^iS(F_n^i-S_{n+1}^i)}{C(S,n\Delta t)e^{r\Delta t}-\rho_u-\lambda_n^i(F_n^i-S_{n+1}^i)}
+\end{aligned}
+\end{equation*}
+\textcolor{red}{Downward}
+\begin{equation*}
+\begin{aligned}
+S_{n+1}^i&=\frac{S_{n+1}^{i+1}\{P(S,n\Delta t)e^{r\Delta t}-\rho_l\}-\lambda_n^iS(F_n^i-S_{n+1}^{i+1})}{P(S,n\Delta t)e^{r\Delta t}-\rho_l-\lambda_n^i(F_n^i-S_{n+1}^{i+1})}
+\end{aligned}
+\end{equation*}
+}
+
+\section{Copula Estimation}
+
+\frame{
+\frametitle{Copula}
+\begin{itemize}
+\item Model dependencies between assets in a portfolio
+\item Measurement of risk of a portfolio
+\item Extrem outcomes are more likely if the assets in a portfolio are highly correlated
+\item Reduction of risk by reducing the correlation of the returns 
+\item Possibility to model assets with different distributions
+\end{itemize}
+}
+
+\frame{
+\frametitle{Empirical Study}
+\begin{itemize}
+\item Empirical study using Gaussian, t, Gumbel and Clayton copula\\
+\item $S\&P \ 500$ stocks between 2006 and 2015\\
+\item Data from three sectors (aeronautic and defense, media and oil exploration) with four companies each
+\end{itemize}
+}
+
+\frame{
+\frametitle{Used Copulae}
+Gaussian Copula\\
+\begin{equation*}
+\begin{aligned}
+\textcolor{blue} {C_p^{Gauss}(u_1,...,u_d)=\Phi_p(\Phi^{-1}(u_1),...,\Phi^{-1}(u_d))}
+\end{aligned}
+\end{equation*}\\
+Student's t-copula\\
+\begin{equation*}
+\begin{aligned}
+\textcolor{blue}{{C_{{\nu},{\Psi}}^t}(u_1,..._u_d)={t_{{\nu},{\Psi}}}(t_{\nu}^{-1}(u_1),...,t_{\nu}^{-1}(u_d))}
+\end{aligned}
+\end{equation*}
+}
+
+
+\frame{
+\frametitle{Used Copulae}
+Gumbel copula, 1 $\leq \theta \leq \infty$\\
+\begin{equation*}
+\begin{aligned}
+\textcolor{blue} {C_\theta(u_1,...,u_d)=exp[-\{\sum_{i=1}^d(log \ u_i)^\theta\}^{\theta^{-1}}}
+\end{aligned}
+\end{equation*}
+\\
+Clayton copula, $0 <\theta$\\
+\begin{equation*}
+\begin{aligned}
+\textcolor{blue} {C_\theta(u_1,...,u_d)=\{(\sum_{i=1}^du_i^{-\theta})-d+1\}^{-\dfrac{1}{\theta}}}
+\end{aligned}
+\end{equation*}
+}
+
+\frame{
+\frametitle{Procedure}
+\begin{itemize}
+\item GARCH for stock return\\
+\item Using residuals to estimate dependence structure from copula functions\\
+\item Simulate d-dimensional dependence bades on copula\\
+\item Portfolio Value-at-Risk estimate 
+\end{itemize}
+}
+
+
+\frame{
+\frametitle{Companies Included}
+Aeronautic and defense
+\begin{itemize}
+\item Boing, Lockheed Martin, Northrop Grumman, General Dynamics
+\end{itemize}
+Media
+\begin{itemize}
+\item CBS, Comcast, Time Warners, Viacom
+\end{itemize}
+Oil exploration and equipment
+\begin{itemize}
+\item Devon Energy, Occidental Petroleum, Marathon Oil, ConocoPhillips
+\end{itemize}
+}
+
+\frame{ 
+\frametitle{Tau(Clayton Copula)}
+\begin{tabular}{|r|c|c|c|c|}
+  \hline
+  {} & Boing & LM & NG & GD \\
+  \hline
+  \hline
+  Boing & 1 & 0.06 & 0.52 & 0.43 \\ 
+  LM & 0.06 & 1 & 0.05 & 0.01 \\
+  NG & 0.52 & 0.05 & 1 & 0.58\\
+  GD & 0.43 & 0.01 & 0.58 & 1\\
+  \hline
+  CBS & 0.31 & 0 & 0.31 & 0.33\\
+  Comcast & 0.32 & 0.05 & 0.38 & 0.35\\
+  TW & 0.33 & 0.04 & 0.34 & 0.33\\
+  Viacom & 0.22 & 0 & 0.21 & 0.22\\
+  \hline
+  DE & 0.17 & 0 & 0.20 & 0.25\\
+  OP & 0.19 & 0 & 0.27 & 0.29\\
+  MO & 0.13 & 0 & 0.17 & 0.20\\
+  CP & 0.22 & 0 & 0.25 & 0.25\\
+  \hline
+  \hline
+\end{tabular}
+}
+
+\frame{ 
+\frametitle{Tau(Clayton Copula)}
+\begin{tabular}{|r|c|c|c|c|}
+  \hline
+  {} & CBS & Comcast & TW & Viacom \\
+  \hline
+  \hline
+  Boing & 0.31 & 0.32 & 0.33 & 0.22 \\ 
+  LM & 0 & 0.05 & 0.04 & 0 \\
+  NG & 0.31 & 0.38 & 0.34 & 0.21\\
+  GD & 0.33 & 0.35 & 0.33 & 0.22\\
+  \hline
+  CBS & 1 & 0.43 & 0.43 & 0.36\\
+  Comcast & 0.43 & 1 & 0.45 & 0.31\\
+  TW & 0.43 & 0.45 & 1 & 0.37\\
+  Viacom & 0.36 & 0.31 & 0.37 & 1\\
+  \hline
+  DE & 0.30 & 0.25 & 0.21 & 0.19\\
+  OP & 0.28 & 0.27 & 0.23 & 0.19\\
+  MO & 0.27 & 0.21 & 0.20 & 0.20\\
+  CP & 0.29 & 0.24 & 0.23 & 0.19\\
+  \hline
+  \hline
+\end{tabular}
+}
+
+\frame{ 
+\frametitle{Tau(Clayton Copula)}
+\begin{tabular}{|r|c|c|c|c|}
+  \hline
+  {} & DE & OP & MO & CP \\
+  \hline
+  \hline
+  Boing & 0.17 & 0.19 & 0.13 & 0.22 \\ 
+  LM & 0 & 0 & 0 & 0 \\
+  NG & 0.20 & 0.27 & 0.17 & 0.25\\
+  GD & 0.25 & 0.29 & 0.20 & 0.25\\
+  \hline
+  CBS & 0.30 & 0.28 & 0.27 & 0.29\\
+  Comcast & 0.25 & 0.27 & 0.21 & 0.24\\
+  TW & 0.21 & 0.23 & 0.20 & 0.23\\
+  Viacom & 0.19 & 0.19 & 0.20 & 0.19\\
+  \hline
+  DE & 1 & 0.56 & 0.58 & 0.56\\
+  OP & 0.56 & 1 & 0.54 & 0.55\\
+  MO & 0.58 & 0.54 & 1 & 0.57\\
+  CP & 0.56 & 0.55 & 0.57 & 1\\
+  \hline
+  \hline
+\end{tabular}
+}
+
+\frame{
+\frametitle{Results}
+\begin{itemize}
+\item Higher dependence of companies in the same sector
+\item Similar structure of the other Copulae
+\item Gumbel finds in general a higher dependence as the Clayton
+\item Gaussian and t-Copula very similar and with higher dependence as the other two
+\end{itemize}
+}
+
+\end{document}
