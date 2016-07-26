@@ -1,6 +1,6 @@
 \beamer@endinputifotherversion {3.36pt}
 \select@language {english}
 \beamer@sectionintoc {1}{Outline}{2}{0}{1}
-\beamer@sectionintoc {2}{Copula and VaR}{2}{0}{2}
+\beamer@sectionintoc {2}{Copula}{2}{0}{2}
 \beamer@sectionintoc {2}{PCA on Implied Volatilities}{4}{0}{3}
 \beamer@sectionintoc {3}{Derivation: IBT Downward Nodes}{5}{0}{4}
