@@ -1,0 +1,84 @@
+# ----------------------------------------------------------------------
+# Book:          XFG
+# ----------------------------------------------------------------------
+# See also:      XFGiv00, XFGiv01, XFGiv02
+# ----------------------------------------------------------------------
+# Quantlet:      XFGiv03
+# ----------------------------------------------------------------------
+# Description:   XFGiv03 shows the term structure of implied volatility
+#                indices. These indices, representing different option
+#                maturities, measure volatility implied in ATM European
+#                call and put options. The VDAX calculations are based on
+#                Black and Scholes formula. Term structures for ATM DAX 
+#                options can be derived from VDAX subindices for any given
+#                trading day since 18 March 1996. Shapes of the term
+#                structure on subsequent trading days are shown in a plot.
+#                If we compare the volatility structure of 27 October 1997
+#                (blue line) with that of 28 Octorber 1997 (green line), 
+#                we easily notice an overnight upward shift in the levels
+#                implied volatilities. In addition, it displays an inversion
+#                as short term volatilities are higher than long term ones.
+#                Only a couple of weeks later, on 17 November (skyblue line)
+#                and 20 November (red line), the term structure had
+#                normalized at lower levels and showed its typical shape
+#                again. Apparently, during the market tumble in fall 1997,
+#                the ATM term structure shifted and changed its shape
+#                considerably over time.
+# ----------------------------------------------------------------------
+# Keywords:      implied volatility, iv, term structure, Black and Scholes,
+#                european option, call, put, option
+# ----------------------------------------------------------------------
+# Usage:         -
+# ----------------------------------------------------------------------
+# Author:        Awdesch Melzer
+# ----------------------------------------------------------------------
+
+# clear cache and close graphs
+rm(list=ls(all=TRUE))
+graphics.off()
+
+setwd("/Users/Sophie/Dropbox/XFG/IV PCA")
+
+x = read.csv2("VSMI_daily_2008.csv", stringsAsFactors = FALSE) # load data
+x = x[,2:7]
+x = sapply(x, as.numeric)
+x = data.frame(x)
+
+#select observations
+#15.09.2016
+x1 = x[186,]
+#16.09.2016
+x2 = x[187,]
+#15.01.2015
+x3 = x[2100,]
+#16.01.2015
+x4 = x[2101,]
+
+x1 = c(45.3169, 31.0296, 26.8339, 27.3332, 21.2356, 21.9919)
+x1 = x1/100
+x1 = cbind(1:6,x1)
+
+
+x2 = c(48.556 , 32.6078	,28.472	,28.4014	,20.8589,	22.3173)
+x2 = x2/100
+x2 = cbind(1:6,x2)  
+
+x3 = c(22.2001 , 21.9313	,21.6788	,22.0591,	16.0393,	21.1556)
+x3 = x3/100
+x3 = cbind(1:6,x3)  
+
+x4 = c(24.5998 , 23.593	,22.2561,	22.077,	15.7392	,21.3218)
+x4 = x4/100
+x4 = cbind(1:6,x4)  
+
+# prepare for plotting
+
+plot(x1,type="l",col="blue3",ylim=c(0.15,0.5),lwd=2,xlab="Subindex",ylab="Implied Volatility")
+lines(x2,col="darkgreen",lwd=2)
+lines(x3,col="skyblue",lwd=2)
+lines(x4,col="red3",lwd=2)
+title("Term structure")
+points(x1,pch=1,col="blue3",lwd=2)         # setting points
+points(x2,pch=1,col="darkgreen",lwd=2)
+points(x3,pch=1,col="skyblue",lwd=2)
+points(x4,pch=1,col="red3",lwd=2)
